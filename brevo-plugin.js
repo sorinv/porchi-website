@@ -2,44 +2,57 @@ import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 
 export function customBrevoPlugin() {
-	// Find the exact absolute system path to this file during build time
 	const __filename = fileURLToPath(import.meta.url);
 	const __dirname = dirname(__filename);
 
 	return {
 		id: "custom-brevo-email",
 		name: "Custom Brevo Email",
-		// This tells EmDash where to read the registration logic from
+		version: "1.0.0",
 		entrypoint: resolve(__dirname, './brevo-plugin.js'), 
 	};
 }
 
-// This is the actual execution function that EmDash calls via the entrypoint
-export default function registerPlugin(ctx) {
-	ctx.hooks.register("email:deliver", async ({ to, subject, html, text }) => {
-		// Paste your actual credentials here
-		const BREVO_API_KEY = "xkeysib-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"; 
-		const SENDER_EMAIL = "your-verified-brevo@email.com";
-		const SENDER_NAME = "Your App Name";
+export function createPlugin() {
+	return {
+		id: "custom-brevo-email",
+		version: "1.0.0",
+		register(ctx) {
+			ctx.hooks.register("email:deliver", async ({ to, subject, html, text }) => {
+				
+				// 🔐 Securely pull credentials from Cloudflare Environment Variables
+				// If ctx.env isn't populated, fall back to global process.env or globalThis
+				const runtimeEnv = ctx.env || process.env || globalThis;
+				
+				const BREVO_API_KEY = runtimeEnv.BREVO_API_KEY; 
+				const SENDER_EMAIL = "sorin@sorinv.com";
+				const SENDER_NAME = "Porchi's Website";
 
-		const response = await fetch("https://brevo.com", {
-			method: "POST",
-			headers: {
-				"accept": "application/json",
-				"api-key": BREVO_API_KEY,
-				"content-type": "application/json"
-			},
-			body: JSON.stringify({
-				sender: { name: SENDER_NAME, email: SENDER_EMAIL },
-				to: [{ email: to }],
-				subject: subject,
-				htmlContent: html || text
-			})
-		});
+				if (!BREVO_API_KEY || !SENDER_EMAIL) {
+					console.error("Brevo Plugin Error: Missing BREVO_API_KEY or BREVO_SENDER_EMAIL environment variable.");
+					return;
+				}
 
-		if (!response.ok) {
-			const errorText = await response.text();
-			console.error("Brevo delivery failed:", errorText);
+				const response = await fetch("https://brevo.com", {
+					method: "POST",
+					headers: {
+						"accept": "application/json",
+						"api-key": BREVO_API_KEY,
+						"content-type": "application/json"
+					},
+					body: JSON.stringify({
+						sender: { name: SENDER_NAME, email: SENDER_EMAIL },
+						to: [{ email: to }],
+						subject: subject,
+						htmlContent: html || text
+					})
+				});
+
+				if (!response.ok) {
+					const errorText = await response.text();
+					console.error("Brevo delivery failed:", errorText);
+				}
+			});
 		}
-	});
+	};
 }
