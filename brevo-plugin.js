@@ -1,24 +1,23 @@
-// 1. Build-time descriptor function (called in astro.config.mjs)
+// 1. Build-time descriptor factory
 export function customBrevoPlugin() {
 	return {
 		id: "custom-brevo-email",
 		name: "Custom Brevo Email",
 		version: "1.0.0",
-		// Pure web-compliant relative entrypoint path (bypasses Node path/url modules)
-		entrypoint: "./brevo-plugin.js", 
+		// Bypasses Node path utilities by leveraging Vite's built-in web-safe URL converter
+		entrypoint: new URL('./brevo-plugin.js', import.meta.url).pathname, 
 	};
 }
 
-// 2. Runtime execution function (the named export EmDash expects)
+// 2. Runtime execution block
 export function createPlugin() {
 	return {
 		id: "custom-brevo-email",
 		version: "1.0.0",
 		register(ctx) {
-			// Hook securely into EmDash's internal email delivery pipeline
 			ctx.hooks.register("email:deliver", async ({ to, subject, html, text }) => {
 				try {
-					// Pull secrets securely from Cloudflare's runtime environment
+					// Secure runtime extraction from Cloudflare's dashboard environment variables
 					const runtimeEnv = ctx?.env || process?.env || globalThis || {};
 					
 					const BREVO_API_KEY = runtimeEnv.BREVO_API_KEY; 
@@ -30,7 +29,7 @@ export function createPlugin() {
 						return;
 					}
 
-					const response = await fetch("https://brevo.com", {
+					const response = await fetch("https://api.brevo.com/v3/smtp/email", {
 						method: "POST",
 						headers: {
 							"accept": "application/json",
