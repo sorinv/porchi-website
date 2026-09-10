@@ -5,7 +5,7 @@ import { formsPlugin } from "@emdash-cms/plugin-forms";
 import webhookNotifier from "@emdash-cms/plugin-webhook-notifier";
 import { defineConfig, fontProviders } from "astro/config";
 import emdash from "emdash/astro";
-import { injectBrevoEmail } from "./brevo-plugin.js";
+import { customBrevoPlugin } from "./brevo-plugin.js"
 
 const emdashConfig = {
 			database: d1({ binding: "DB", session: "auto" }),
@@ -14,7 +14,8 @@ const emdashConfig = {
 //			sandboxed: [webhookNotifier],
 			plugins: [
 				formsPlugin(), 
-				webhookNotifier
+				webhookNotifier,
+				customBrevoPlugin() 
 			],
 			sandboxed: [],
 			sandboxRunner: sandbox(),
@@ -30,7 +31,7 @@ export default defineConfig({
 	},
 	integrations: [
 		react(),
-		emdash(injectBrevoEmail(emdashConfig)),
+		emdash(emdashConfig),
 	],
 	fonts: [
 		{
