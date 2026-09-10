@@ -23,7 +23,13 @@
 	//		"binding": "LOADER",
 	//	},
 	//],
-	// General maintenance cron trigger
+  "kv_namespaces": [
+    {
+      "binding": "SESSION",
+      "id": "3ac1f3cc604a47fca1f069d216f11288"
+    }
+  ],	
+// General maintenance cron trigger
 	"triggers": {
 		"crons": ["* * * * *"],
 	},
