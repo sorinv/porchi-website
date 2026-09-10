@@ -74,6 +74,7 @@ export function createPlugin() {
 					// SendGrid returns 202 Accepted with an empty body on success.
 					if (!res.ok) {
 						const detail = await res.text().catch(() => "<unreadable>");
+						console.log(`[sendgrid] send failed ${res.status}: ${detail}`);
 						throw new Error(`[sendgrid] send failed ${res.status}: ${detail}`);
 					}
 
