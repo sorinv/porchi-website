@@ -8,7 +8,7 @@
 //   - failure MUST throw -- the return value is not inspected for errors
 
 const SENDGRID_ENDPOINT = "https://api.sendgrid.com/v3/mail/send";
-const SENDER_EMAIL = "sorin@sorinv.com";
+const SENDER_EMAIL = "sorin@pagepeeker.com";
 const SENDER_NAME = "Porchi Website";
 
 // Build-time factory descriptor (used in astro.config.mjs)
