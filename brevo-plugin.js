@@ -1,28 +1,18 @@
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
+// A simple, pure-javascript function that hooks directly into the running instance
+export function injectBrevoEmail(config) {
+	// If the plugins array doesn't exist yet, initialize it
+	if (!config.plugins) {
+		config.plugins = [];
+	}
 
-export function customBrevoPlugin() {
-	const __filename = fileURLToPath(import.meta.url);
-	const __dirname = dirname(__filename);
-
-	return {
-		id: "custom-brevo-email",
-		name: "Custom Brevo Email",
-		version: "1.0.0",
-		entrypoint: resolve(__dirname, './brevo-plugin.js'), 
-	};
-}
-
-export function createPlugin() {
-	return {
+	// Push a naked plugin definition directly into EmDash's live execution cycle
+	config.plugins.push({
 		id: "custom-brevo-email",
 		version: "1.0.0",
 		register(ctx) {
-			// Wrap the entire assignment safely inside the execution hook, 
-			// ensuring it only runs when an actual email is being triggered.
 			ctx.hooks.register("email:deliver", async ({ to, subject, html, text }) => {
 				try {
-					// Fallbacks to safely fetch Cloudflare's runtime variables
+					// Safely pull from Cloudflare Environment Variables at runtime
 					const runtimeEnv = ctx?.env || process?.env || globalThis || {};
 					
 					const BREVO_API_KEY = runtimeEnv.BREVO_API_KEY; 
@@ -30,7 +20,7 @@ export function createPlugin() {
 					const SENDER_NAME = "Porchi's Website";
 
 					if (!BREVO_API_KEY || !SENDER_EMAIL) {
-						console.error("Brevo Plugin Error: Missing BREVO_API_KEY or BREVO_SENDER_EMAIL environment variable.");
+						console.error("Brevo Plugin Error: Missing BREVO_API_KEY or BREVO_SENDER_EMAIL in Cloudflare settings.");
 						return;
 					}
 
@@ -54,10 +44,12 @@ export function createPlugin() {
 						console.error("Brevo delivery failed:", errorText);
 					}
 				} catch (err) {
-					console.error("Critical error in Brevo Plugin execution pipeline:", err);
+					console.error("Critical error in Brevo execution block:", err);
 				}
 			});
 		}
-	};
+	});
+
+	return config;
 }
 
