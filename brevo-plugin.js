@@ -1,18 +1,24 @@
-// A simple, pure-javascript function that hooks directly into the running instance
-export function injectBrevoEmail(config) {
-	// If the plugins array doesn't exist yet, initialize it
-	if (!config.plugins) {
-		config.plugins = [];
-	}
+// 1. Build-time descriptor function (called in astro.config.mjs)
+export function customBrevoPlugin() {
+	return {
+		id: "custom-brevo-email",
+		name: "Custom Brevo Email",
+		version: "1.0.0",
+		// Pure web-compliant relative entrypoint path (bypasses Node path/url modules)
+		entrypoint: "./brevo-plugin.js", 
+	};
+}
 
-	// Push a naked plugin definition directly into EmDash's live execution cycle
-	config.plugins.push({
+// 2. Runtime execution function (the named export EmDash expects)
+export function createPlugin() {
+	return {
 		id: "custom-brevo-email",
 		version: "1.0.0",
 		register(ctx) {
+			// Hook securely into EmDash's internal email delivery pipeline
 			ctx.hooks.register("email:deliver", async ({ to, subject, html, text }) => {
 				try {
-					// Safely pull from Cloudflare Environment Variables at runtime
+					// Pull secrets securely from Cloudflare's runtime environment
 					const runtimeEnv = ctx?.env || process?.env || globalThis || {};
 					
 					const BREVO_API_KEY = runtimeEnv.BREVO_API_KEY; 
@@ -48,8 +54,6 @@ export function injectBrevoEmail(config) {
 				}
 			});
 		}
-	});
-
-	return config;
+	};
 }
 
