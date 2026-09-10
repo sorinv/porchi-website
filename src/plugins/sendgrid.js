@@ -35,6 +35,9 @@ export function createPlugin() {
 			"email:deliver": {
 				exclusive: true,
 				timeout: 10000, // read by executeWithTimeout
+				pluginId: "custom-sendgrid-email",
+				priority: 100,
+        		dependencies: [],
 				handler: async (event, ctx) => {
 					const { message } = event;
 					const { to, subject, text, html } = message;
