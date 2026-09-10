@@ -39,8 +39,7 @@ export function createPlugin() {
 				priority: 100,
         		dependencies: [],
 				handler: async (event, ctx) => {
-				    const { env } = await import("cloudflare:workers");
-				    const apiKey = env.SENDGRID_API_KEY;
+				    const apiKey = await ctx.kv.get("apiKey");
 					
 					const { message } = event;
 					const { to, subject, text, html } = message;
@@ -56,9 +55,6 @@ export function createPlugin() {
 					if (html) content.push({ type: "text/html", value: html });
 
 					console.log("[brevo] key", typeof apiKey, apiKey ? apiKey.slice(0, 6) : "NONE");
-
-console.log("[brevo] id", ctx.plugin.id);
-console.log("[brevo] rows", JSON.stringify(await ctx.kv.list()));					
 
 					const res = await fetch("https://api.brevo.com/v3/smtp/email", {
 					    method: "POST",
