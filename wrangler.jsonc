@@ -19,7 +19,7 @@
   "kv_namespaces": [
     {
       "binding": "KV",
-      "id": "PASTE_YOUR_COPIED_ID_HERE"
+      "id": "porchi-website-session"
     }
   ],	// Worker Loader for plugin sandboxing
 	//"worker_loaders": [
