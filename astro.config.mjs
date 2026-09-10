@@ -5,7 +5,6 @@ import { formsPlugin } from "@emdash-cms/plugin-forms";
 import webhookNotifier from "@emdash-cms/plugin-webhook-notifier";
 import { defineConfig, fontProviders } from "astro/config";
 import emdash from "emdash/astro";
-import { customBrevoPlugin } from "./brevo-plugin.js"
 
 const BREVO_API_KEY = import.meta.env.BREVO_API_KEY || process.env.BREVO_API_KEY;
 const SENDER_EMAIL = "sorin@sorinv.com";
