@@ -7,8 +7,6 @@
 //   - event is { message, source }; message is { to, subject, text, html? }
 //   - failure MUST throw -- the return value is not inspected for errors
 
-import { env } from "cloudflare:workers"
-
 const SENDGRID_ENDPOINT = "https://api.sendgrid.com/v3/mail/send";
 const SENDER_EMAIL = "sorin@pagepeeker.com";
 const SENDER_NAME = "Porchi Website";
