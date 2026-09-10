@@ -55,6 +55,8 @@ export function createPlugin() {
 					if (text) content.push({ type: "text/plain", value: text });
 					if (html) content.push({ type: "text/html", value: html });
 
+					console.log("[brevo] key", typeof apiKey, apiKey ? apiKey.slice(0, 6) : "NONE");
+
 					const res = await fetch("https://api.brevo.com/v3/smtp/email", {
 					    method: "POST",
 					    headers: {
