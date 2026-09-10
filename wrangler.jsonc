@@ -16,7 +16,12 @@
 			"bucket_name": "porchi-website","preview_bucket_name": "porchi-website",
 		},
 	],
-	// Worker Loader for plugin sandboxing
+  "kv_namespaces": [
+    {
+      "binding": "KV",
+      "id": "PASTE_YOUR_COPIED_ID_HERE"
+    }
+  ],	// Worker Loader for plugin sandboxing
 	//"worker_loaders": [
 	//	{
 	//		"binding": "LOADER",
