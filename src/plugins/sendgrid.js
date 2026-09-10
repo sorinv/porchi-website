@@ -41,10 +41,12 @@ export function createPlugin() {
 				priority: 100,
         		dependencies: [],
 				handler: async (event, ctx) => {
+				    const { env } = await import("cloudflare:workers");
+				    const apiKey = env.SENDGRID_API_KEY;
+					
 					const { message } = event;
 					const { to, subject, text, html } = message;
 
-					const apiKey = env.SENDGRID_API_KEY;
 					if (!apiKey) {
 						// Throwing is the contract: invokeExclusiveHook catches it and
 						// sendInner rethrows, so the caller sees a real failure.
