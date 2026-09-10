@@ -5,6 +5,8 @@ import { formsPlugin } from "@emdash-cms/plugin-forms";
 import webhookNotifier from "@emdash-cms/plugin-webhook-notifier";
 import { defineConfig, fontProviders } from "astro/config";
 import emdash from "emdash/astro";
+import { customSendgridPlugin } from './sendgrid.js';
+
 
 const emdashConfig = {
 			database: d1({ binding: "DB", session: "auto" }),
@@ -14,6 +16,8 @@ const emdashConfig = {
 			plugins: [
 				formsPlugin(), 
 				webhookNotifier,
+				customSendgridPlugin(),
+
 			],
 			sandboxed: [],
 			sandboxRunner: sandbox(),
