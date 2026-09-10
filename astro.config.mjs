@@ -6,7 +6,7 @@ import webhookNotifier from "@emdash-cms/plugin-webhook-notifier";
 import { defineConfig, fontProviders } from "astro/config";
 import emdash from "emdash/astro";
 
-import { customBrevoPlugin } from "./brevo-integration.js";
+import { customBrevoPlugin } from "./brevo.js";
 
 const emdashConfig = {
 			database: d1({ binding: "DB", session: "auto" }),
