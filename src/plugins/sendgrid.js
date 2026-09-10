@@ -7,6 +7,8 @@
 //   - event is { message, source }; message is { to, subject, text, html? }
 //   - failure MUST throw -- the return value is not inspected for errors
 
+import { env } from "cloudflare:workers"
+
 const SENDGRID_ENDPOINT = "https://api.sendgrid.com/v3/mail/send";
 const SENDER_EMAIL = "sorin@pagepeeker.com";
 const SENDER_NAME = "Porchi Website";
@@ -25,7 +27,7 @@ export function createPlugin() {
 	return {
 		id: "custom-sendgrid-email",
 		version: "1.0.0",
-
+		storage: {},
 		// Plain array. Required for the email:deliver hook to be registered at all --
 		// HOOK_REQUIRED_CAPABILITY maps email:deliver -> this capability, and a
 		// mismatch is a silent console.warn + skip, not an error.
@@ -42,7 +44,7 @@ export function createPlugin() {
 					const { message } = event;
 					const { to, subject, text, html } = message;
 
-					const apiKey = ctx?.env?.SENDGRID_API_KEY;
+					const apiKey = env.SENDGRID_API_KEY;
 					if (!apiKey) {
 						// Throwing is the contract: invokeExclusiveHook catches it and
 						// sendInner rethrows, so the caller sees a real failure.
