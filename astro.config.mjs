@@ -5,7 +5,7 @@ import { formsPlugin } from "@emdash-cms/plugin-forms";
 import webhookNotifier from "@emdash-cms/plugin-webhook-notifier";
 import { defineConfig, fontProviders } from "astro/config";
 import emdash from "emdash/astro";
-import { brevoPlugin } from "emdash-plugin-brevo";
+import { customBrevoPlugin } from "./brevo-plugin.js"
 
 export default defineConfig({
 	output: "server",
@@ -24,7 +24,7 @@ export default defineConfig({
 			plugins: [
 				formsPlugin(), 
 				webhookNotifier, 
-				brevoPlugin()
+				customBrevoPlugin()
 			],
 			sandboxed: [],
 			sandboxRunner: sandbox(),
