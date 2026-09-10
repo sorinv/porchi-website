@@ -5,6 +5,7 @@ import { formsPlugin } from "@emdash-cms/plugin-forms";
 import webhookNotifier from "@emdash-cms/plugin-webhook-notifier";
 import { defineConfig, fontProviders } from "astro/config";
 import emdash from "emdash/astro";
+import { brevoPlugin } from "emdash-plugin-brevo";
 
 export default defineConfig({
 	output: "server",
@@ -18,8 +19,14 @@ export default defineConfig({
 		emdash({
 			database: d1({ binding: "DB", session: "auto" }),
 			storage: r2({ binding: "MEDIA" }),
-			plugins: [formsPlugin()],
-			sandboxed: [webhookNotifier],
+//			plugins: [formsPlugin()],
+//			sandboxed: [webhookNotifier],
+			plugins: [
+				formsPlugin(), 
+				webhookNotifier, 
+				brevoPlugin()
+			],
+			sandboxed: [],
 			sandboxRunner: sandbox(),
 			marketplace: "https://marketplace.emdashcms.com",
 		}),
