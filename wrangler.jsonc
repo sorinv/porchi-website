@@ -7,7 +7,8 @@
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "porchi-website","database_id": "0b74ebeb-8f92-4ffb-b486-8e35f061317c",
+			"database_name": "porchi-website",
+			"database_id": "0f0dd208-c960-42bc-87e8-d0e9e0c5fac7",
 		},
 	],
 	"r2_buckets": [
