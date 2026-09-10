@@ -55,20 +55,22 @@ export function createPlugin() {
 					if (text) content.push({ type: "text/plain", value: text });
 					if (html) content.push({ type: "text/html", value: html });
 
-					const res = await fetch(SENDGRID_ENDPOINT, {
-						method: "POST",
-						headers: {
-							"Authorization": `Bearer ${apiKey}`,
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify({
-							personalizations: [{ to: [{ email: to }] }],
-							from: { email: SENDER_EMAIL, name: SENDER_NAME },
-							subject,
-							content,
-						}),
+					const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+					    method: "POST",
+					    headers: {
+					        "api-key": apiKey,
+					        "Content-Type": "application/json",
+					        "accept": "application/json",
+					    },
+					    body: JSON.stringify({
+					        sender: { name: SENDER_NAME, email: SENDER_EMAIL },
+					        to: [{ email: to }],
+					        subject,
+					        htmlContent: html,
+					        textContent: text,
+					    }),
 					});
-
+					
 					// SendGrid returns 202 Accepted with an empty body on success.
 					if (!res.ok) {
 						const detail = await res.text().catch(() => "<unreadable>");
