@@ -27,8 +27,8 @@ export function createPlugin() {
 		id: "custom-sendgrid-email",
 		version: "1.0.0",
 		register(ctx) {
-			ctx.capabilities.add("email:deliver");
-
+			ctx.capabilities.add("hooks.email-transport:register");
+			
 			ctx.hooks.register("email:deliver", async ({ to, subject, html, text }) => {
 				// Env comes from ctx only. `process` is not defined on Workers, and
 				// `process?.env` still throws ReferenceError on an undeclared
