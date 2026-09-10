@@ -57,6 +57,9 @@ export function createPlugin() {
 
 					console.log("[brevo] key", typeof apiKey, apiKey ? apiKey.slice(0, 6) : "NONE");
 
+console.log("[brevo] id", ctx.plugin.id);
+console.log("[brevo] rows", JSON.stringify(await ctx.kv.list()));					
+
 					const res = await fetch("https://api.brevo.com/v3/smtp/email", {
 					    method: "POST",
 					    headers: {
